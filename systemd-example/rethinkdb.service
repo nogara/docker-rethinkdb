@@ -1,0 +1,16 @@
+[Unit]
+Description=Default RethinkDB Service
+After=etcd.service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker pull edgard/rethinkdb
+ExecStartPre=-/usr/bin/docker stop rethinkdb
+ExecStartPre=-/usr/bin/docker kill rethinkdb
+ExecStartPre=-/usr/bin/docker rm rethinkdb
+ExecStart=/usr/bin/docker run --name rethinkdb -p 8080:8080 -p 28015:28015 -p 29015:29015 -v /srv/rethinkdb:/data edgard/rethinkdb
+ExecStop=/usr/bin/docker stop rethinkdb
+
+[Install]
+WantedBy=multi-user.target
